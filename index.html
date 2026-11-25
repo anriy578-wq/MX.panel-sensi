@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AURA AIMLOCK PRO</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#050d1b;color:white;font-family:Arial}
+.panel{max-width:450px;margin:auto;padding:22px;background:#0b1b32;border:1px solid #168cff;border-radius:20px;box-shadow:0 0 25px #087dff55}
+h1{text-align:center;color:#38aaff}
+p{text-align:center;color:#91bfff}
+.item{background:#102b49;padding:15px;margin:13px 0;border-radius:12px}
+.head{display:flex;justify-content:space-between}
+.value{color:#38aaff}
+input{width:100%;accent-color:#168cff}
+button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:10px;background:#087dff;color:white;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="panel">
+<h1>⚡ AURA PRO</h1>
+<p>FREE FIRE INDIA • GALAXY S10</p>
+<div id="settings"></div>
+<button onclick="save()">SAVE SETTINGS</button>
+<button onclick="reset()">RESET SETTINGS</button>
+<p>BLUE NEON ESPORTS</p>
+</div>
+<script>
+const defaults={
+"General":156,
+"Red Dot":163,
+"2X Scope":180,
+"4X Scope":170,
+"Sniper Scope":100,
+"Free Look":105
+};
+let values={...defaults};
+function render(){
+let area=document.getElementById("settings");
+area.innerHTML="";
+Object.keys(values).forEach(name=>{
+let box=document.createElement("div");
+box.className="item";
+let head=document.createElement("div");
+head.className="head";
+let title=document.createElement("b");
+title.textContent=name;
+let val=document.createElement("b");
+val.className="value";
+val.textContent=values[name];
+let slider=document.createElement("input");
+slider.type="range";
+slider.min=0;
+slider.max=200;
+slider.value=values[name];
+slider.oninput=()=>{
+values[name]=Number(slider.value);
+val.textContent=slider.value;
+};
+head.append(title,val);
+box.append(head,slider);
+area.append(box);
+});
+}
+function save(){
+try{
+localStorage.setItem("auraSettings",JSON.stringify(values));
+alert("Settings saved!");
+}catch(e){alert("Storage unavailable");}
+}
+function reset(){
+values={...defaults};
+render();
+try{localStorage.removeItem("auraSettings");}catch(e){}
+}
+try{
+let saved=JSON.parse(localStorage.getItem("auraSettings"));
+if(saved && typeof saved==="object"){
+Object.keys(defaults).forEach(k=>{
+if(Number.isInteger(saved[k])&&saved[k]>=0&&saved[k]<=200)
+values[k]=saved[k];
+});
+}
+}catch(e){}
+render();
+</script>
+</body>
+</html>
